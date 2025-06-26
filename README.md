@@ -21,7 +21,7 @@ It provides a non-blocking REST API for managing products (CRUD operations), inc
 - Input validation with `jakarta.validation.Validator`
 - Global exception handling
 - Clean separation of concerns (Handler ↔ Service ↔ Repository)
-- Functional routing (if included)
+- Functional routing
 
 ## 📦 Endpoints
 
@@ -34,15 +34,3 @@ It provides a non-blocking REST API for managing products (CRUD operations), inc
 | DELETE | `/products/{id}`     | Delete a product    |
 
 All endpoints return `application/json`.
-
-## 📂 Project Structure
-
-productcatalogwebflux/
-├── domain/           # Product domain model
-├── dto/              # ProductRequest/ProductResponse
-├── handler/          # WebFlux request handlers
-├── service/          # Business logic
-├── repository/       # Reactive repository
-├── mapper/           # MapStruct mappers
-├── config/           # Router / Bean configs
-└── exception/        # Global error handling
