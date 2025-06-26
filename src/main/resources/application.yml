@@ -1,0 +1,17 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/product_catalog
+    username: test
+    password: test
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+
+logging:
+  level:
+    org.springframework.r2dbc: DEBUG
+    org.springframework.r2dbc.connection.init: DEBUG
+
+server:
+  port: 8080
