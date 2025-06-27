@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -47,7 +46,7 @@ public class ProductServiceTest {
     private Product productEntity;
     private ProductResponse response;
 
-    private Long nonExistentId = 404L;
+    private final Long nonExistentId = 404L;
 
     @BeforeEach
     void setUp() {
@@ -137,9 +136,11 @@ public class ProductServiceTest {
 
     @Test
     void shouldReturnAllProducts() {
-        when(productRepository.findAll()).thenReturn(Flux.just(productEntity));
+        int limit = 10;
+        int offset = 0;
+        when(productRepository.findPaged(limit, offset)).thenReturn(Flux.just(productEntity));
 
-        StepVerifier.create(productService.getAllProduct())
+        StepVerifier.create(productService.getPage(limit, offset))
                 .expectNext(productEntity)
                 .verifyComplete();
     }

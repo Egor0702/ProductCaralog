@@ -14,7 +14,7 @@ public class ProductRouter {
     public RouterFunction<ServerResponse> productRoutes(ProductHandler handler) {
         return RouterFunctions
                 .route()
-                .GET("/products", handler::getAllProducts)
+                .GET("/products", handler::getPage)
                 .GET("/products/{id}", handler::getProductById)
                 .POST("/products", handler::createProduct)
                 .PUT("/products/{id}", handler::updateProduct)

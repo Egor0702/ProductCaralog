@@ -20,10 +20,13 @@ public class ProductHandler {
     }
 
     /**
-     * Handle request GET /products
+     * Handle request GET /products?page=0&size=5
      */
-    public Mono<ServerResponse> getAllProducts(ServerRequest serverRequest) {
-        return productService.getAllProduct()
+    public Mono<ServerResponse> getPage(ServerRequest serverRequest) {
+        int page = serverRequest.queryParam("page").map(Integer::parseInt).orElse(0);
+        int size = serverRequest.queryParam("size").map(Integer::parseInt).orElse(0);
+
+        return productService.getPage(page, size)
                 .collectList()
                 .flatMap(products ->
                         ServerResponse

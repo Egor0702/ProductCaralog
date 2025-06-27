@@ -33,8 +33,9 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
-    public Flux<Product> getAllProduct() {
-        return productRepository.findAll();
+    public Flux<Product> getPage(int page, int size) {
+        int offset = page * size;
+        return productRepository.findPaged(size, offset);
     }
 
     @Transactional

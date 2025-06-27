@@ -25,12 +25,12 @@ It provides a non-blocking REST API for managing products (CRUD operations), inc
 
 ## 📦 Endpoints
 
-| Method | Endpoint             | Description         |
-|--------|----------------------|---------------------|
-| GET    | `/products`          | Get all products    |
-| GET    | `/products/{id}`     | Get product by ID   |
-| POST   | `/products`          | Create a product    |
-| PUT    | `/products/{id}`     | Update a product    |
-| DELETE | `/products/{id}`     | Delete a product    |
+| Method | Endpoint                  | Description                            |
+|--------|---------------------------|----------------------------------------|
+| GET    | `/products?page=0&size=5` | Get all products (supports pagination) |
+| GET    | `/products/{id}`          | Get product by ID                      |
+| POST   | `/products`               | Create a product                       |
+| PUT    | `/products/{id}`          | Update a product                       |
+| DELETE | `/products/{id}`          | Delete a product                       |
 
 All endpoints return `application/json`.
