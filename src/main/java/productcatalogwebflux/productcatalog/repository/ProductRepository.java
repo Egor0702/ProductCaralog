@@ -9,6 +9,9 @@ import reactor.core.publisher.Flux;
 @Repository
 public interface ProductRepository extends ReactiveCrudRepository<Product, Long> {
 
-    @Query("SELECT * FROM product ORDER BY id LIMIT :limit OFFSET :offset")
-    Flux<Product> findPaged(int limit, int offset);
+    @Query("SELECT * FROM product WHERE id > :after ORDER BY id ASC LIMIT :limit")
+    Flux<Product> findAfterId(long after, int limit);
+
+    @Query("SELECT * FROM product ORDER BY id ASC LIMIT :limit")
+    Flux<Product> findFirstPage(int limit);
 }

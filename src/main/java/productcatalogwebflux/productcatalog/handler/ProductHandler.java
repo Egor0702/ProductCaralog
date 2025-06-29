@@ -20,13 +20,13 @@ public class ProductHandler {
     }
 
     /**
-     * Handle request GET /products?page=0&size=5
+     * Handle request GET /products?after=45&size=5
      */
-    public Mono<ServerResponse> getPage(ServerRequest serverRequest) {
-        int page = serverRequest.queryParam("page").map(Integer::parseInt).orElse(0);
-        int size = serverRequest.queryParam("size").map(Integer::parseInt).orElse(0);
+    public Mono<ServerResponse> getProducts(ServerRequest serverRequest) {
+        int size = serverRequest.queryParam("size").map(Integer::parseInt).orElse(10);
+        Long after = serverRequest.queryParam("after").map(Long::parseLong).orElse(null);
 
-        return productService.getPage(page, size)
+        return productService.getProductsAfterId(after, size)
                 .collectList()
                 .flatMap(products ->
                         ServerResponse

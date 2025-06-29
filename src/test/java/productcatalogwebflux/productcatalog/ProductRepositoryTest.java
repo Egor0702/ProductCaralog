@@ -80,7 +80,7 @@ public class ProductRepositoryTest {
 
         Flux<Product> saveAll = Flux.fromArray(products)
                 .concatMap(productRepository::save)
-                .thenMany(productRepository.findPaged(3, 0));
+                .thenMany(productRepository.findAfterId(0, 3));
 
         StepVerifier.create(saveAll).
                 assertNext(findedPage -> {

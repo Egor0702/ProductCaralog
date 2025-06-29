@@ -137,10 +137,10 @@ public class ProductServiceTest {
     @Test
     void shouldReturnAllProducts() {
         int limit = 10;
-        int offset = 0;
-        when(productRepository.findPaged(limit, offset)).thenReturn(Flux.just(productEntity));
+        Long after = 0L;
+        when(productRepository.findAfterId(after, limit)).thenReturn(Flux.just(productEntity));
 
-        StepVerifier.create(productService.getPage(limit, offset))
+        StepVerifier.create(productService.getProductsAfterId(after, limit))
                 .expectNext(productEntity)
                 .verifyComplete();
     }
