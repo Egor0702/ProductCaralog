@@ -34,3 +34,29 @@ It provides a non-blocking REST API for managing products (CRUD operations), inc
 | DELETE | `/products/{id}`           | Delete a product                   |
 
 All endpoints return `application/json`.
+
+## 🔔 Real-Time Updates via WebSocket
+
+The application supports real-time product updates using **WebSocket**.
+
+Whenever a new product is created or updated, connected clients will automatically receive a notification with the product's data in JSON format.
+
+### 📡 WebSocket Endpoint
+
+- `ws://localhost:8080/ws/products` — subscribes the client to product updates.
+
+### 🔁 How It Works
+
+- Clients establish a WebSocket connection.
+- The server emits updates to all connected clients via a shared `Sinks.Many<Product>` stream.
+- Updates are triggered when a new product is created or updated.
+
+### 🧪 Example (Using JavaScript in Browser Console)
+
+```javascript
+const socket = new WebSocket("ws://localhost:8080/ws/products");
+
+socket.onmessage = (event) => {
+  const product = JSON.parse(event.data);
+  console.log("Received product update:", product);
+};

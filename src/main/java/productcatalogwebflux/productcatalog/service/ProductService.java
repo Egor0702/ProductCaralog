@@ -13,6 +13,7 @@ import productcatalogwebflux.productcatalog.mapper.ProductMapper;
 import productcatalogwebflux.productcatalog.repository.ProductRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Sinks;
 
 import java.util.Set;
 
@@ -22,15 +23,18 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final Validator validator;
     private final ProductMapper productMapper;
+    private final Sinks.Many<Product> productSink;
 
     public ProductService(
             ProductRepository productRepository,
             Validator validator,
-            ProductMapper productMapper
+            ProductMapper productMapper,
+            Sinks.Many<Product> productSink
     ) {
         this.productRepository = productRepository;
         this.validator = validator;
         this.productMapper = productMapper;
+        this.productSink = productSink;
     }
 
 
@@ -45,7 +49,8 @@ public class ProductService {
     public Mono<ProductResponse> createProduct(ProductRequest productRequest) {
         dataIsValid(productRequest);
         Product product = productMapper.toEntity(productRequest);
-        return productRepository.save(product)
+        return productRepository.save(product).
+                doOnNext(productSink::tryEmitNext)
                 .map(productMapper::toResponse);
     }
 
