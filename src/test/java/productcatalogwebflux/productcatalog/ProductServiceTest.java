@@ -18,6 +18,7 @@ import productcatalogwebflux.productcatalog.repository.ProductRepository;
 import productcatalogwebflux.productcatalog.service.ProductService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Sinks;
 import reactor.test.StepVerifier;
 
 import java.util.Collections;
@@ -38,6 +39,9 @@ public class ProductServiceTest {
 
     @Mock
     private ProductMapper productMapper;
+
+    @Mock
+    private Sinks.Many<Product> productSink;
 
     @InjectMocks
     private ProductService productService;
@@ -63,6 +67,7 @@ public class ProductServiceTest {
         when(productMapper.toEntity(validRequest)).thenReturn(productEntity);
         when(productRepository.save(productEntity)).thenReturn(Mono.just(productEntity));
         when(productMapper.toResponse(productEntity)).thenReturn(response);
+        when(productSink.tryEmitNext(any())).thenReturn(Sinks.EmitResult.OK);
 
         StepVerifier.create(productService.createProduct(validRequest))
                 .expectNext(response)

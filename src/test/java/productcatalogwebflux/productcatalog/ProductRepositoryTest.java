@@ -1,5 +1,7 @@
 package productcatalogwebflux.productcatalog;
 
+import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,19 +37,46 @@ public class ProductRepositoryTest {
                 postgresContainer.getDatabaseName()
         );
 
+        String jdbcUrl = String.format(
+                "jdbc:postgresql://%s:%d/%s",
+                postgresContainer.getHost(),
+                postgresContainer.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT),
+                postgresContainer.getDatabaseName()
+        );
+
         registry.add("spring.r2dbc.url", () -> r2dbcUrl);
         registry.add("spring.r2dbc.username", postgresContainer::getUsername);
         registry.add("spring.r2dbc.password", postgresContainer::getPassword);
+
+        registry.add("spring.flyway.url", () -> jdbcUrl);
+        registry.add("spring.flyway.user", postgresContainer::getUsername);
+        registry.add("spring.flyway.password", postgresContainer::getPassword);
+    }
+
+    @BeforeAll
+    static void runFlywayMigrations() {
+        Flyway flyway = Flyway.configure()
+                .dataSource(
+                        postgresContainer.getJdbcUrl(),
+                        postgresContainer.getUsername(),
+                        postgresContainer.getPassword()
+                )
+                .locations("classpath:db/migration")
+                .cleanDisabled(false)
+                .load();
+
+        flyway.clean();
+        flyway.migrate();
+    }
+
+    @BeforeEach
+    void cleanDatabase() {
+        productRepository.deleteAll().block();
     }
 
     @Autowired
     private ProductRepository productRepository;
 
-    @BeforeEach
-    void cleanDatabase() {
-        System.out.println("delete");
-        productRepository.deleteAll().block();
-    }
 
     @Test
     void shouldSaveAndFindProduct() {

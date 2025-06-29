@@ -5,8 +5,7 @@ spring:
     password: test
   sql:
     init:
-      mode: always
-      schema-locations: classpath:schema.sql
+      mode: never
 
 logging:
   level:
